@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+  <init>
+    <log text="AndroidBluetooth init"/>
+  </init>
+  
+  <androidManifestUpdates>
+    <addPermission android:name="android.permission.BLUETOOTH" />
+    <addPermission android:name="android.permission.BLUETOOTH_ADMIN" />
+  </androidManifestUpdates>
+
+  <proguardAdditions>
+    <insert>
+      -dontwarn com.hyeon.**
+      -keep class com.hyeon.** {
+      *;
+      }
+    </insert>
+  </proguardAdditions>
+  
+  <prebuildCopies>
+    <copyDir src="$S(PluginDir)/../../ThirdPartyLibraries/Android"
+            dst="$S(BuildDir)" />
+  </prebuildCopies>
+
+  <gameActivityImportAdditions>
+    <insert>
+      import com.hyeon.BluetoothPlugin;
+      import com.hyeon.BluetoothService;
+    </insert>
+  </gameActivityImportAdditions>
+
+  <gameActivityClassAdditions>
+    <insert>
+      private BluetoothPlugin mBluetoothPlugin;
+
+      public void AndroidThunkJava_StartBluetooth() {
+        mBluetoothPlugin = new BluetoothPlugin(this);
+        mBluetoothPlugin.StartPlugin();
+      }
+
+      public void AndroidThunkJava_StopBluetooth() {
+      }
+
+      public void AndroidThunkJava_SearchBluetooth() {
+        mBluetoothPlugin.ScanDevice();
+      }
+
+      public void AndroidThunkJava_ConnectBluetooth(String _device) {
+        mBluetoothPlugin.Connect(_device);
+      }
+    </insert>
+  </gameActivityClassAdditions>
+</root>
